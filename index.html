@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sonu Embroidery – ਕੱਪੜੇ ਨੂੰ ਮਿਲੇ ਨਵੀਂ ਪਛਾਣ।
+</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#ffe6f0; margin:0; }
+    header { background:#ff4d94; color:white; padding:15px; text-align:center; }
+    .container { max-width:600px; margin:20px auto; background:white; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1); }
+    h2 { color:#ff4d94; }
+    input, select, button { width:100%; padding:10px; margin:8px 0; }
+    button { background:#ff4d94; color:white; border:none; cursor:pointer; border-radius:5px; }
+    button:hover { background:#e60073; }
+    .status { margin-top:15px; padding:10px; background:#fff0f6; border-radius:5px; }
+    .admin { margin-top:30px; border-top:1px solid #ddd; padding-top:20px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Sonu Embroidery</h1>
+    <p>ਕੱਪੜੇ ਨੂੰ ਮਿਲੇ ਨਵੀਂ ਪਛਾਣ।</p>
+  </header>
+
+  <div class="container">
+    <h2>Customer – Suit Status Check</h2>
+    <input type="text" id="bill" placeholder="Bill Number daalein" />
+    <button onclick="checkStatus()">Check Status</button>
+    <div id="result" class="status"></div>
+
+    <div class="admin">
+      <h2>Admin Panel</h2>
+      <input type="password" id="adminPass" placeholder="Admin Password" />
+      <button onclick="loginAdmin()">Login</button>
+
+      <div id="adminArea" style="display:none;">
+        <h3>New / Update Order</h3>
+        <input type="text" id="aBill" placeholder="Bill Number" />
+        <input type="text" id="aName" placeholder="Customer Name" />
+        <select id="aStatus">
+          <option value="Pending">Pending</option>
+          <option value="Confirmed">Confirmed</option>
+          <option value="In Process">Suit Ban Raha Hai</option>
+          <option value="Ready">Suit Ready</option>
+        </select>
+        <button onclick="saveOrder()">Save Order</button>
+        <p id="adminMsg"></p>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const ADMIN_PASSWORD = "9877514992@Sonu";
+
+  function getOrders() {
+    return JSON.parse(localStorage.getItem("orders") || "{}");
+  }
+
+  function saveOrders(data) {
+    localStorage.setItem("orders", JSON.stringify(data));
+  }
+
+  function checkStatus() {
+    const bill = document.getElementById("bill").value.trim();
+    const orders = getOrders();
+    const result = document.getElementById("result");
+
+    if (!bill) { result.innerHTML = "Bill number daalein"; return; }
+
+    if (orders[bill]) {
+      result.innerHTML = `<b>Name:</b> ${orders[bill].name}<br><b>Status:</b> ${orders[bill].status}`;
+    } else {
+      result.innerHTML = "❌ Incorrect Bill Number";
+    }
+  }
+
+  function loginAdmin() {
+    const pass = document.getElementById("adminPass").value;
+    if (pass === ADMIN_PASSWORD) {
+      document.getElementById("adminArea").style.display = "block";
+    } else {
+      alert("Wrong Password");
+    }
+  }
+
+  function saveOrder() {
+    const bill = document.getElementById("aBill").value.trim();
+    const name = document.getElementById("aName").value.trim();
+    const status = document.getElementById("aStatus").value;
+
+    if (!bill || !name) { alert("Complete details daalein"); return; }
+
+    const orders = getOrders();
+    orders[bill] = { name, status };
+    saveOrders(orders);
+
+    document.getElementById("adminMsg").innerText = "Order Saved / Updated ✔";
+  }
+</script>
+</body>
+</html>
